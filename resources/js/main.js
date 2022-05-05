@@ -106,13 +106,13 @@ $(function(){
    
             editBtn.addEventListener('click', (e) => {
     
-                   showLoading() 
+             
                 e.preventDefault()
-                showModal()
+                showModal();
+                showLoading();
+
                 $("img#avatar-contact-form").show()
 
-
-               
                 action = "edit";
                 idEdit = e.target.dataset.id;
 
@@ -180,7 +180,7 @@ $(function(){
                 }else{
                     
                     $('#form-add')[0].reset();
-                    closeModal()
+                  
                    // si il y a des contacts, ne plus afficher que c'est null
                     // if(!data.contacts?.length ){
                     //     $("#empty-contacts").addClass('hidden');
@@ -197,14 +197,10 @@ $(function(){
                         $(`#${idEdit}`).find("p#email").text(data.update.email);
                         $(`#${idEdit}`).find("p#names").text(`${data.update.nom} ${data.update.prenom}`);
                         $(`#${idEdit}`).find("p#prenom").text(data.update.prenom);
-                        if(data.update.image_url === null){
-                            console.log("oui")
-                        }else{
-                            console.log("non")
-                            // $(`#${idEdit}`).find("img#avatar").classList.add('hidden');  
-                        }
                         $(`#${idEdit}`).find("img#avatar").attr("src",`/storage/${data.update?.image_url}`);
                     }
+
+                    closeModal();
                 }
             }
         });

@@ -2232,9 +2232,9 @@ $(function () {
       for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
         editBtn = _step3.value;
         editBtn.addEventListener('click', function (e) {
-          showLoading();
           e.preventDefault();
           showModal();
+          showLoading();
           $("img#avatar-contact-form").show();
           action = "edit";
           idEdit = e.target.dataset.id;
@@ -2286,8 +2286,7 @@ $(function () {
           //     // custom input error red
           // })
         } else {
-          $('#form-add')[0].reset();
-          closeModal(); // si il y a des contacts, ne plus afficher que c'est null
+          $('#form-add')[0].reset(); // si il y a des contacts, ne plus afficher que c'est null
           // if(!data.contacts?.length ){
           //     $("#empty-contacts").addClass('hidden');
           // }
@@ -2304,15 +2303,10 @@ $(function () {
             $("#".concat(idEdit)).find("p#email").text(data.update.email);
             $("#".concat(idEdit)).find("p#names").text("".concat(data.update.nom, " ").concat(data.update.prenom));
             $("#".concat(idEdit)).find("p#prenom").text(data.update.prenom);
-
-            if (data.update.image_url === null) {
-              console.log("oui");
-            } else {
-              console.log("non"); // $(`#${idEdit}`).find("img#avatar").classList.add('hidden');  
-            }
-
             $("#".concat(idEdit)).find("img#avatar").attr("src", "/storage/".concat((_data$update = data.update) === null || _data$update === void 0 ? void 0 : _data$update.image_url));
           }
+
+          closeModal();
         }
       }
     });
