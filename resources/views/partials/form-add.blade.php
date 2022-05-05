@@ -59,7 +59,7 @@
           </div>
           <div class="mb-6">
             <div class="p-6 w-full flex justify-center  bg-white flex-wrap rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-              <img id='avatar-contact-form' class="p-8 shadow-lg rounded-lg w-80	h-48 " src=""/>
+              <img id='avatar-contact-form' class="p-8 shadow-lg rounded-lg w-80	h-64 " src=""/>
               <input name='avatar' id="input-form" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
             </div>
             <p class="mt-2 text-sm text-red-600 dark:text-red-500 font-medium error-text" id='error_avatar'><span class="font-medium"></span></p>
@@ -71,7 +71,7 @@
             <button id='sendData' class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
               Enregistrer
             </button>
-            <button type="button" id='action' class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+            <button type="button" id='cancel' class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
               Annuler
             </button>
           </div>

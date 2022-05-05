@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Image;
+
 
 class Contact extends Model
 {
@@ -19,4 +21,10 @@ class Contact extends Model
         'email',
         'prenom'
     ];
+
+    // relation onetoone : un contact à une unique image et une image appartient à un unique contact
+    
+    public function image (){
+        return $this->hasOne(Image::class);
+    }
 }

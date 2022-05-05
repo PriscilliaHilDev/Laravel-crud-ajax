@@ -2135,6 +2135,7 @@ $(function () {
   var outCloseModal = document.querySelector('#bg-modal');
   var inputs = document.querySelectorAll('#input-form');
   var msgInput = document.querySelectorAll('p.error-text');
+  var btnCancel = document.querySelector('#cancel');
 
   var showModal = function showModal() {
     if (overlay.classList.contains('hidden')) {
@@ -2163,6 +2164,9 @@ $(function () {
     }
   };
 
+  btnCancel.addEventListener('click', function () {
+    closeModal();
+  });
   outCloseModal.addEventListener('click', function () {
     closeModal();
   });
@@ -2221,6 +2225,17 @@ $(function () {
       $("#form-add").addClass("block");
     }
   };
+
+  var inputFile = document.querySelector("#input-form[name='avatar']");
+  var imgPrevious = document.querySelector('#avatar-contact-form');
+  inputFile.addEventListener('change', function (e) {
+    var file = e.target.files[0];
+
+    if (file) {
+      imgPrevious.setAttribute('src', URL.createObjectURL(file));
+      imgPrevious.style.display = "block";
+    }
+  });
 
   var getOneContact = function getOneContact() {
     var allEditBtn = document.querySelectorAll('#editData');
@@ -2283,7 +2298,7 @@ $(function () {
           $.each(data.error, function (prefix, val) {
             $('p#' + "error_" + prefix).text(val[0]);
           }); // $.each(inputs, (index, input) => {
-          //     // custom input error red
+          // custom input error red
           // })
         } else {
           $('#form-add')[0].reset(); // si il y a des contacts, ne plus afficher que c'est null

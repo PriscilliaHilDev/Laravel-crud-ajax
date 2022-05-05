@@ -21,8 +21,8 @@ $(function(){
     const btnAddContact = document.querySelector('#new-contact');
     const outCloseModal = document.querySelector('#bg-modal');
     let inputs = document.querySelectorAll('#input-form');
-    let msgInput = document.querySelectorAll('p.error-text')
-
+    let msgInput = document.querySelectorAll('p.error-text');
+    let btnCancel = document.querySelector('#cancel'); 
 
     const showModal = () => {
         if(overlay.classList.contains('hidden')){
@@ -40,6 +40,10 @@ $(function(){
             msg.textContent = ''
         } 
     }
+
+    btnCancel.addEventListener('click', () => {
+        closeModal()
+    });
   
     outCloseModal.addEventListener('click', () =>{
         closeModal()
@@ -97,6 +101,21 @@ $(function(){
         }
     }
  
+
+    let inputFile = document.querySelector("#input-form[name='avatar']");
+    let imgPrevious = document.querySelector('#avatar-contact-form');
+   
+    inputFile.addEventListener('change', (e) => {
+
+        const file = e.target.files[0];
+        
+        if(file){
+       
+            imgPrevious.setAttribute('src', URL.createObjectURL(file));
+            imgPrevious.style.display = "block";
+        }
+    })
+
 
   const getOneContact = () => {
 
@@ -162,8 +181,6 @@ $(function(){
 
             success:function(data){
                 
-                
-
                 if(data.status == 0){
 
                     console.log(data, 'error');
@@ -174,7 +191,7 @@ $(function(){
                     });
 
                     // $.each(inputs, (index, input) => {
-                    //     // custom input error red
+                        // custom input error red
                     // })
                 
                 }else{

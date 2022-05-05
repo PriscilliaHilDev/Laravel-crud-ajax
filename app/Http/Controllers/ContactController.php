@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use App\Models\User;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
-use Image;
+use Images;
 
 
 class ContactController extends Controller
@@ -43,29 +44,26 @@ class ContactController extends Controller
                 return response()->json(["status"=> 0, 'error'=> $validator->errors()->toArray()]);
 
             }else{
+            
                 $contact = new Contact;
+                $image = new Image;
                 
                 $contact->nom         = $request->nom ;
                 $contact->prenom      = $request->prenom ;
                 $contact->email       = $request->email ;
+               
 
                 if($request->hasFile('avatar')) {
-
                   
                     $originalImage= $request->file('avatar');
-                    $thumbnailImage = Image::make($originalImage);
-                    $thumbnailPath = public_path().'/storage/thumbnails/';
-                    $originalPath = public_path().'/storage/avatars/';
+                    $thumbnailImage = Images::make($originalImage);
+                    $thumbnailAbolutePath = public_path().'/storage/thumbnails/';
+                    $originalAbsolutePath = public_path().'/storage/avatars/';
                     $nameFile = time().$originalImage->getClientOriginalName();
-                    $thumbnailImage->save($originalPath.$nameFile);
+                    $thumbnailImage->save($originalAbsolutePath.$nameFile);
                     $thumbnailImage->resize(150,150);
-                    $thumbnailImage->save($thumbnailPath.$nameFile); 
+                    $thumbnailImage->save($thumbnailAbolutePath.$nameFile); 
                     $pathThumb = "thumbnails/".$nameFile;
-
-                    //fin thumb
-
-                    // img normale
-                    // $fileName = time(). '.' .$request->avatar->extension();
 
                     // $pathImg = $request->file('avatar')->storeAs(
                     //     'avatars',
@@ -73,20 +71,18 @@ class ContactController extends Controller
                     //     'public'
                     // );
 
-            
-                    $contact->image_url = $pathThumb;
-
+                    $image->path = $pathThumb;
 
                 }else{
-                    
-                    $contact->image_url = "avatars/default-avatar.jpg";
+                    $image->path = "thumbnails/default-avatar.jpg";
                 }
 
                 $query = $contact->save();
+                $queryImg = $contact->image()->save($image);
 
-                if( $query ){
+                if( $query && $queryImg){
+
                     $maxID = Contact::orderBy('id', 'desc')->value('id'); 
-                    $oneContact = $contact;
                     return response()->json(['status'=>1, 
                                             'msg'=>'New Student has been successfully registered',
                                             'id'=>$maxID
