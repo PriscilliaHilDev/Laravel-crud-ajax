@@ -2128,7 +2128,6 @@ $(function () {
   /***************** début modal **********************/
   // const token =  $('meta[name="csrf-token"]').attr('content')
 
-  console.log(document.querySelector('p#email'));
   var action;
   var idEdit;
   var overlay = document.querySelector('#overlay');
@@ -2225,7 +2224,6 @@ $(function () {
 
   var getOneContact = function getOneContact() {
     var allEditBtn = document.querySelectorAll('#editData');
-    console.log(allEditBtn, "les btn editions");
 
     var _iterator3 = _createForOfIteratorHelper(allEditBtn),
         _step3;
@@ -2301,10 +2299,19 @@ $(function () {
 
 
           if (action === "edit") {
+            var _data$update;
+
             $("#".concat(idEdit)).find("p#email").text(data.update.email);
             $("#".concat(idEdit)).find("p#names").text("".concat(data.update.nom, " ").concat(data.update.prenom));
             $("#".concat(idEdit)).find("p#prenom").text(data.update.prenom);
-            $("#".concat(idEdit)).find("img#avatar").attr("src", "/storage/".concat(data.update.image_url));
+
+            if (data.update.image_url === null) {
+              console.log("oui");
+            } else {
+              console.log("non"); // $(`#${idEdit}`).find("img#avatar").classList.add('hidden');  
+            }
+
+            $("#".concat(idEdit)).find("img#avatar").attr("src", "/storage/".concat((_data$update = data.update) === null || _data$update === void 0 ? void 0 : _data$update.image_url));
           }
         }
       }
@@ -2341,6 +2348,25 @@ $(function () {
       // edit contact
 
       getOneContact();
+      var cardsContact = document.querySelectorAll('ul#list-contact>li');
+
+      var _iterator4 = _createForOfIteratorHelper(cardsContact),
+          _step4;
+
+      try {
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          card = _step4.value;
+          var srcIMG = card.querySelector('img').getAttribute("src");
+
+          if (srcIMG === "") {
+            card.querySelector('img').classList.add('hidden');
+          }
+        }
+      } catch (err) {
+        _iterator4.e(err);
+      } finally {
+        _iterator4.f();
+      }
     }, 'json');
   }
 });

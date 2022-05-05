@@ -14,7 +14,6 @@ $(function(){
 
     // const token =  $('meta[name="csrf-token"]').attr('content')
 
-    console.log(document.querySelector('p#email'))
     let action;
     let idEdit;
 
@@ -48,15 +47,20 @@ $(function(){
 
     btnAddContact.addEventListener('click', ()=> {
       
-        showModal()
+        showModal();
+
         showLoading();
+
         setInterval(() => {
-            showForm()
+            showForm();
         }, 1000);
+
         action = "new";
+
         for(input of inputs){
             input.value =''
         }
+
         $("img#avatar-contact-form").hide()
 
     });
@@ -98,7 +102,6 @@ $(function(){
 
         const allEditBtn = document.querySelectorAll('#editData');
 
-        console.log(allEditBtn, "les btn editions")
         for(editBtn of allEditBtn){
    
             editBtn.addEventListener('click', (e) => {
@@ -194,7 +197,13 @@ $(function(){
                         $(`#${idEdit}`).find("p#email").text(data.update.email);
                         $(`#${idEdit}`).find("p#names").text(`${data.update.nom} ${data.update.prenom}`);
                         $(`#${idEdit}`).find("p#prenom").text(data.update.prenom);
-                        $(`#${idEdit}`).find("img#avatar").attr("src",`/storage/${data.update.image_url}`);
+                        if(data.update.image_url === null){
+                            console.log("oui")
+                        }else{
+                            console.log("non")
+                            // $(`#${idEdit}`).find("img#avatar").classList.add('hidden');  
+                        }
+                        $(`#${idEdit}`).find("img#avatar").attr("src",`/storage/${data.update?.image_url}`);
                     }
                 }
             }
@@ -244,7 +253,18 @@ $(function(){
         //    }, 2000);
 
            // edit contact
-             getOneContact()
+             getOneContact();
+
+             let cardsContact = document.querySelectorAll('ul#list-contact>li');
+            
+             for(card of cardsContact){
+                 let srcIMG = card.querySelector('img').getAttribute("src");
+                if(srcIMG === ""){
+                    card.querySelector('img').classList.add('hidden');  
+                }
+                 
+             }
+
         },'json');
     }
          

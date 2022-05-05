@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Image;
 
 
 class ContactController extends Controller
@@ -18,12 +19,6 @@ class ContactController extends Controller
         $this->contacts = Contact::orderBy('created_at', 'desc')->get();  
     }
 
-    // public function index () {
-    
-    //     return view('contacts.list', [
-    //         'contacts' => $this->contacts
-    //     ]);
-    // }
 
     public function fetchAllContacts () {
 
@@ -32,13 +27,13 @@ class ContactController extends Controller
 
     }
 
-
     public function addContact (Request $request) {
 
         $validator = Validator::make($request->all(), [
             'nom' => 'required|max:100',
             'prenom' => 'required',
             'email' =>'required',
+            'avatar' => 'image|mimes:jpeg,png,jpg|max:2048'
         ]);
        
         if($request->ajax()){
@@ -55,17 +50,37 @@ class ContactController extends Controller
                 $contact->email       = $request->email ;
 
                 if($request->hasFile('avatar')) {
+
+                  
+                    $originalImage= $request->file('avatar');
+                    $thumbnailImage = Image::make($originalImage);
+                    $thumbnailPath = public_path().'/storage/thumbnails/';
+                    $originalPath = public_path().'/storage/avatars/';
+                    $nameFile = time().$originalImage->getClientOriginalName();
+                    $thumbnailImage->save($originalPath.$nameFile);
+                    $thumbnailImage->resize(150,150);
+                    $thumbnailImage->save($thumbnailPath.$nameFile); 
+                    $pathThumb = "thumbnails/".$nameFile;
+
+                    //fin thumb
+
+                    // img normale
+                    // $fileName = time(). '.' .$request->avatar->extension();
+
+                    // $pathImg = $request->file('avatar')->storeAs(
+                    //     'avatars',
+                    //     $fileName,
+                    //     'public'
+                    // );
+
+            
+                    $contact->image_url = $pathThumb;
+
+
+                }else{
                     
-                    $fileName = time(). '.' .$request->avatar->extension();
-
-                    $pathImg = $request->file('avatar')->storeAs(
-                        'avatars',
-                        $fileName,
-                        'public'
-                    );
-
-                    $contact->image_url  = $pathImg;
-                };
+                    $contact->image_url = "avatars/default-avatar.jpg";
+                }
 
                 $query = $contact->save();
 
@@ -124,8 +139,16 @@ class ContactController extends Controller
             
                 if($request->hasFile('avatar')) {
                     
-                    $fileName = time(). '.' .$request->avatar->extension();
+                    // delete old img 
+                    if($getContact->image_url !== null){
+                        // $oldPath = (Storage::url($getContact->image_url));
+                        if(Storage::disk("public")->exists($getContact->image_url)){
+                            Storage::disk("public")->delete($getContact->image_url);
+                        }
+                        
+                    }
 
+                    $fileName = time(). '.' .$request->avatar->extension();
                     $pathImg = $request->file('avatar')->storeAs(
                         'avatars',
                         $fileName,
@@ -133,7 +156,8 @@ class ContactController extends Controller
                     );
 
                     $getContact->image_url  = $pathImg;
-                };
+
+                }
 
                 $query = $getContact->save();
     
