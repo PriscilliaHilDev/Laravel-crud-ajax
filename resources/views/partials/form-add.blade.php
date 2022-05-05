@@ -59,7 +59,7 @@
           </div>
           <div class="mb-6">
             <div class="p-6 w-full flex justify-center  bg-white flex-wrap rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-              <img id='avatar-contact-form' class="p-8 shadow-lg rounded-lg w-80	h-64 " src=""/>
+              <img id='avatar-contact-form' class="p-8 shadow-lg rounded-lg w-80 h-64 " src=""/>
               <input name='avatar' id="input-form" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
             </div>
             <p class="mt-2 text-sm text-red-600 dark:text-red-500 font-medium error-text" id='error_avatar'><span class="font-medium"></span></p>

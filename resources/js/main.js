@@ -146,10 +146,10 @@ $(function(){
                             showForm()
                         }, 1000);
 
-                            $('input[name="email"]').val(res.email);
-                            $('input[name="prenom"]').val(res.prenom);
-                            $('input[name="nom"]').val(res.nom);
-                            $("img#avatar-contact-form").attr('src', `/storage/${res.image_url}`)
+                            $('input[name="email"]').val(res.result.email);
+                            $('input[name="prenom"]').val(res.result.prenom);
+                            $('input[name="nom"]').val(res.result.nom);
+                            $("img#avatar-contact-form").attr('src', `/storage/${res.img}`)
                     },
                     error:function(err){
                         console.log(err)
@@ -214,7 +214,7 @@ $(function(){
                         $(`#${idEdit}`).find("p#email").text(data.update.email);
                         $(`#${idEdit}`).find("p#names").text(`${data.update.nom} ${data.update.prenom}`);
                         $(`#${idEdit}`).find("p#prenom").text(data.update.prenom);
-                        $(`#${idEdit}`).find("img#avatar").attr("src",`/storage/${data.update?.image_url}`);
+                        $(`#${idEdit}`).find("img#avatar").attr("src",`/storage/${data.img}`);
                     }
 
                     closeModal();

@@ -58,10 +58,10 @@ class ContactController extends Controller
                     $originalImage= $request->file('avatar');
                     $thumbnailImage = Images::make($originalImage);
                     $thumbnailAbolutePath = public_path().'/storage/thumbnails/';
-                    $originalAbsolutePath = public_path().'/storage/avatars/';
+                    // $originalAbsolutePath = public_path().'/storage/avatars/';
                     $nameFile = time().$originalImage->getClientOriginalName();
-                    $thumbnailImage->save($originalAbsolutePath.$nameFile);
-                    $thumbnailImage->resize(150,150);
+                    // $thumbnailImage->save($originalAbsolutePath.$nameFile);
+                    $thumbnailImage->resize(200,200);
                     $thumbnailImage->save($thumbnailAbolutePath.$nameFile); 
                     $pathThumb = "thumbnails/".$nameFile;
 
@@ -101,7 +101,7 @@ class ContactController extends Controller
         if($request->ajax()){
 
             if($currentContact){
-                return response()->json($currentContact);
+                return response()->json(['result'=>$currentContact,'img'=>$currentContact->image->path]);
             }else{
                 return response()->json(["msg" => "contact introuvable"]);
             }
@@ -134,35 +134,47 @@ class ContactController extends Controller
                 $getContact->email = $request->email;
             
                 if($request->hasFile('avatar')) {
-                    
+
+                    $originalImage= $request->file('avatar');
+                    $thumbnailImage = Images::make($originalImage);
+                    $thumbnailAbolutePath = public_path().'/storage/thumbnails/';
+                    // $originalAbsolutePath = public_path().'/storage/avatars/';
+                    $nameFile = time().$originalImage->getClientOriginalName();
+                    // $thumbnailImage->save($originalAbsolutePath.$nameFile);
+                    $thumbnailImage->resize(200,200);
+                    $thumbnailImage->save($thumbnailAbolutePath.$nameFile); 
+                    $pathThumb = "thumbnails/".$nameFile;
+                
+
                     // delete old img 
-                    if($getContact->image_url !== null){
-                        // $oldPath = (Storage::url($getContact->image_url));
-                        if(Storage::disk("public")->exists($getContact->image_url)){
-                            Storage::disk("public")->delete($getContact->image_url);
+                    if($getContact->image->path !== "thumbnails/default-avatar.jpg"){
+
+                        $oldThumbnail = $getContact->image->path;
+
+                        if(Storage::disk("public")->exists($oldThumbnail)){
+                            Storage::disk("public")->delete($oldThumbnail);
                         }
-                        
+
+                        // $nameOldThumb = substr($oldThumbnail, 11,strlen($oldThumbnail));
+                           
                     }
 
-                    $fileName = time(). '.' .$request->avatar->extension();
-                    $pathImg = $request->file('avatar')->storeAs(
-                        'avatars',
-                        $fileName,
-                        'public'
-                    );
-
-                    $getContact->image_url  = $pathImg;
-
+                    $getContact->image->path = $pathThumb;
                 }
+
+                $queryImg = $getContact->image()->update([
+                    'path' => $pathThumb,
+                ]);
 
                 $query = $getContact->save();
     
-                if( $query ){
+                if( $query && $queryImg ){
 
                     return response()->json(['status'=>1,
                                              'msg'=>'Mise à jour réussite !',
                                              'contacts'=> $this->contacts->toArray(),
-                                             'update' => $getContact
+                                             'update' => $getContact,
+                                             'img'=> $getContact->image->path
                                             ]);
                 }
             }

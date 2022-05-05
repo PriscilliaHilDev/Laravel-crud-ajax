@@ -2260,10 +2260,10 @@ $(function () {
               setInterval(function () {
                 showForm();
               }, 1000);
-              $('input[name="email"]').val(res.email);
-              $('input[name="prenom"]').val(res.prenom);
-              $('input[name="nom"]').val(res.nom);
-              $("img#avatar-contact-form").attr('src', "/storage/".concat(res.image_url));
+              $('input[name="email"]').val(res.result.email);
+              $('input[name="prenom"]').val(res.result.prenom);
+              $('input[name="nom"]').val(res.result.nom);
+              $("img#avatar-contact-form").attr('src', "/storage/".concat(res.img));
             },
             error: function error(err) {
               console.log(err);
@@ -2313,12 +2313,10 @@ $(function () {
 
 
           if (action === "edit") {
-            var _data$update;
-
             $("#".concat(idEdit)).find("p#email").text(data.update.email);
             $("#".concat(idEdit)).find("p#names").text("".concat(data.update.nom, " ").concat(data.update.prenom));
             $("#".concat(idEdit)).find("p#prenom").text(data.update.prenom);
-            $("#".concat(idEdit)).find("img#avatar").attr("src", "/storage/".concat((_data$update = data.update) === null || _data$update === void 0 ? void 0 : _data$update.image_url));
+            $("#".concat(idEdit)).find("img#avatar").attr("src", "/storage/".concat(data.img));
           }
 
           closeModal();
