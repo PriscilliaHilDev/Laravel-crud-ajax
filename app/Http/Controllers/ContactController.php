@@ -75,6 +75,7 @@ class ContactController extends Controller
 
                 }
 
+                // je dois creer le contact avant de l'envoie dans la table image one to one
                 $query = $contact->save();
                 $queryImg = $contact->image()->save($image);
 
@@ -159,6 +160,7 @@ class ContactController extends Controller
                            
                     }
 
+                    // le contact existe déjà donc on procede à la mise a jour de l'img si une nouvelle a ete posté
                     $getContact->image->path = $pathThumb;
                     $queryImg = $getContact->image()->update([
                         'path' => $pathThumb,
@@ -183,5 +185,24 @@ class ContactController extends Controller
 
             return view('errors.ajax');
         } 
+    }
+
+    public function deleteContact (Int $id, Request $request){
+
+        $deleteContact = Contact::find($id);
+
+        if($request->ajax()){
+
+            $actionDelete = $deleteContact->delete();
+
+            if($actionDelete){
+                return response()->json(['msg'=> 'contact supprimé avec succès']);
+            }else{
+                return response()->json(["msg" => "Une erreur s'est produite"]);
+            }
+
+        }else{
+            return view('errors.ajax');
+        }
     }
 }

@@ -30,4 +30,5 @@ Route::get('/edit/{id}', [ContactController::class, "editContact"])->name('get-e
 Route::post('/edit/{id}', [ContactController::class, "editContact"])->name('edit-contact')->whereNumber('id');
 Route::get('/detail/{id}', [ContactController::class, "detailContact"])->name('detail-contact')->whereNumber('id');
 Route::get('/{membre}',[FiltreController::class,'filtreContact'])->name('filtre-contact');
+Route::get('/supprimer/{id}',[ContactController::class,'deleteContact'])->name('delete-contact');
 

@@ -2116,20 +2116,32 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 var _require = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"),
-    isArguments = _require.isArguments; // exo 
-// let tab = ['aa', 5, 8, 'kr'];
-// console.log(!tab?.length,!tab.lenght, tab.length === 0, 'vide')
-// console.log(tab.length > 0, !!tab?.length 'pas vide ?')
-// au demarrage de l'application 
+    isArguments = _require.isArguments,
+    get = _require.get; // au demarrage de l'application 
 
 
 $(function () {
+  var showLoading = function showLoading(idElement, idLoading) {
+    // Si l'element est visilble, if faut le cacher
+    if ($(idElement).hasClass('block')) {
+      $(idElement).addClass('hidden');
+      $(idElement).removeClass('block');
+    } // Si le loading est caché il faut l"afficher
+
+
+    if ($(idLoading).hasClass('hidden')) {
+      $(idLoading).removeClass('hidden');
+      $(idLoading).addClass("block");
+    }
+  };
+
   getContacts();
   /***************** début modal **********************/
   // const token =  $('meta[name="csrf-token"]').attr('content')
 
   var action;
   var idEdit;
+  var idDelete;
   var overlay = document.querySelector('#overlay');
   var btnAddContact = document.querySelector('#new-contact');
   var outCloseModal = document.querySelector('#bg-modal');
@@ -2172,9 +2184,9 @@ $(function () {
   });
   btnAddContact.addEventListener('click', function () {
     showModal();
-    showLoading();
+    showLoading("#form-add", '#load-form');
     setInterval(function () {
-      showForm();
+      showElement("#form-add", '#load-form');
     }, 1000);
     action = "new";
 
@@ -2198,31 +2210,17 @@ $(function () {
 
   /***************** début ajax soumission formulaire **********************/
 
-  var showLoading = function showLoading() {
-    // cacher le formulaire pour afficher que le loading
-    if ($("#form-add").hasClass('block')) {
-      $("#form-add").addClass('hidden');
-      $('#form-add').removeClass('block');
-    } // afficher le loading si il a ete caché
+  var showElement = function showElement(idElement, idLoading) {
+    // si loading est afficher on le retire 
+    if ($(idLoading).hasClass('block')) {
+      $(idLoading).removeClass('block');
+      $(idLoading).addClass("hidden");
+    } // si l'element est caché on l'affiche
 
 
-    if ($("#loading").hasClass('hidden')) {
-      $("#loading").removeClass('hidden');
-      $("#loading").addClass("block");
-    }
-  };
-
-  var showForm = function showForm() {
-    // si loading est afficher on le retire pour afficher le formulaire
-    if ($("#loading").hasClass('block')) {
-      $("#loading").removeClass('block');
-      $("#loading").addClass("hidden");
-    } // si le formulaire est caché on l'affiche 
-
-
-    if ($("#form-add").hasClass('hidden')) {
-      $("#form-add").removeClass("hidden");
-      $("#form-add").addClass("block");
+    if ($(idElement).hasClass('hidden')) {
+      $(idElement).removeClass("hidden");
+      $(idElement).addClass("block");
     }
   };
 
@@ -2237,7 +2235,7 @@ $(function () {
     }
   });
 
-  var getOneContact = function getOneContact() {
+  var editContact = function editContact() {
     var allEditBtn = document.querySelectorAll('#editData');
 
     var _iterator3 = _createForOfIteratorHelper(allEditBtn),
@@ -2247,9 +2245,9 @@ $(function () {
       for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
         editBtn = _step3.value;
         editBtn.addEventListener('click', function (e) {
-          e.preventDefault();
+          // e.preventDefault()
           showModal();
-          showLoading();
+          showLoading("#form-add", '#load-form');
           $("img#avatar-contact-form").show();
           action = "edit";
           idEdit = e.target.dataset.id;
@@ -2259,7 +2257,7 @@ $(function () {
             success: function success(res) {
               // apres une seconde afficher le formulaire à la place du loading
               setInterval(function () {
-                showForm();
+                showElement("#form-add", '#load-form');
               }, 1000);
               $('input[name="email"]').val(res.result.email);
               $('input[name="prenom"]').val(res.result.prenom);
@@ -2297,6 +2295,43 @@ $(function () {
     }
   };
 
+  var deleteContact = function deleteContact() {
+    var allDeleteBtn = document.querySelectorAll('button#delete');
+
+    var _iterator5 = _createForOfIteratorHelper(allDeleteBtn),
+        _step5;
+
+    try {
+      for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+        deleteBtn = _step5.value;
+        deleteBtn.addEventListener('click', function (e) {
+          var confirmation = confirm('Are you sure you want to delete this item?');
+
+          if (confirmation) {
+            idDelete = e.target.dataset.id;
+            $.ajax({
+              url: route('delete-contact', idDelete),
+              type: "GET",
+              success: function success(res) {
+                getContacts();
+                console.log(res.msg);
+              },
+              error: function error(err) {
+                console.log(err);
+              }
+            });
+          } else {
+            return;
+          }
+        });
+      }
+    } catch (err) {
+      _iterator5.e(err);
+    } finally {
+      _iterator5.f();
+    }
+  };
+
   var form = document.querySelector('#form-add');
 
   var submitForm = function submitForm(urlRequest) {
@@ -2320,11 +2355,7 @@ $(function () {
           // custom input error red
           // })
         } else {
-          $('#form-add')[0].reset(); // si il y a des contacts, ne plus afficher que c'est null
-          // if(!data.contacts?.length ){
-          //     $("#empty-contacts").addClass('hidden');
-          // }
-          // si on ajoute un contact, l'afficher
+          $('#form-add')[0].reset(); // si on ajoute un contact, l'afficher
 
           if (action === "new") {
             getContacts(data.id);
@@ -2358,42 +2389,16 @@ $(function () {
     }
   });
 
-  function getContacts(id) {
-    // $('#refresh-list-ajax').addClass('animate-pulse');
-    // $(`#${id}>div#card-contact`).addClass("bg-green-200");
-    //  let previous = id-1;
+  function getContacts() {
+    var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    showLoading("#list-contact", '#load-data');
     $.get(route("list-contacts"), {}, function (data) {
-      $('#refresh-list-ajax').html(data.result); // if($(`#${previous}`).hasClass("bg-green-200")){
-      //     $(`#${previous}>div#card-contact`).removeClass('bg-gree-200')
-      // }
-      // dans 2 sec supp la classe animate pulse
-      //     setTimeout(() => {
-      //        if($('#refresh-list-ajax').hasClass("animate-pulse")){
-      //             $('#refresh-list-ajax').removeClass('animate-pulse');
-      //        } 
-      //    }, 2000);
-      // edit contact
-
-      getOneContact();
-      var cardsContact = document.querySelectorAll('ul#list-contact>li');
-
-      var _iterator5 = _createForOfIteratorHelper(cardsContact),
-          _step5;
-
-      try {
-        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-          card = _step5.value;
-          var srcIMG = card.querySelector('img').getAttribute("src");
-
-          if (srcIMG === "") {
-            card.querySelector('img').classList.add('hidden');
-          }
-        }
-      } catch (err) {
-        _iterator5.e(err);
-      } finally {
-        _iterator5.f();
-      }
+      $('#refresh-list-ajax').html(data.result);
+      setInterval(function () {
+        showElement("#list-contact", '#load-data');
+      }, 1000);
+      editContact();
+      deleteContact();
     }, 'json');
   }
 });

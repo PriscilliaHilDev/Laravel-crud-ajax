@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Image;
 use App\Models\Note;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 
 class Contact extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
      /**
      * The attributes that are mass assignable.
      *

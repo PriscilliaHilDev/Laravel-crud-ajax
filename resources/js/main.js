@@ -1,21 +1,33 @@
-const { isArguments } = require("lodash");
+const { isArguments, get } = require("lodash");
 
- // exo 
-    // let tab = ['aa', 5, 8, 'kr'];
-    // console.log(!tab?.length,!tab.lenght, tab.length === 0, 'vide')
-    // console.log(tab.length > 0, !!tab?.length 'pas vide ?')
+
 
 // au demarrage de l'application 
 $(function(){
 
+    const showLoading = (idElement, idLoading) => {
+        // Si l'element est visilble, if faut le cacher
+        if($(idElement).hasClass('block')){
+           $(idElement).addClass('hidden');
+           $(idElement).removeClass('block')
+       }
+
+       // Si le loading est caché il faut l"afficher
+       if($(idLoading).hasClass('hidden')){
+           $(idLoading).removeClass('hidden');
+           $(idLoading).addClass("block");
+      }
+   }
+
+
   getContacts();
     /***************** début modal **********************/
-   
 
     // const token =  $('meta[name="csrf-token"]').attr('content')
 
     let action;
     let idEdit;
+    let idDelete;
 
     const overlay = document.querySelector('#overlay');
     const btnAddContact = document.querySelector('#new-contact');
@@ -53,10 +65,10 @@ $(function(){
       
         showModal();
 
-        showLoading();
+        showLoading("#form-add", '#load-form');
 
         setInterval(() => {
-            showForm();
+            showElement("#form-add", '#load-form');
         }, 1000);
 
         action = "new";
@@ -73,31 +85,19 @@ $(function(){
 
     /***************** début ajax soumission formulaire **********************/
 
-    const showLoading = () => {
-         // cacher le formulaire pour afficher que le loading
-         if($("#form-add").hasClass('block')){
-            $("#form-add").addClass('hidden');
-            $('#form-add').removeClass('block')
-        }
+  
 
-        // afficher le loading si il a ete caché
-        if($("#loading").hasClass('hidden')){
-            $("#loading").removeClass('hidden');
-            $("#loading").addClass("block");
-       }
-    }
+    const showElement = (idElement, idLoading) => {
 
-    const showForm = () => {
-
-        // si loading est afficher on le retire pour afficher le formulaire
-        if($("#loading").hasClass('block')){
-            $("#loading").removeClass('block');
-            $("#loading").addClass("hidden");
+        // si loading est afficher on le retire 
+        if($(idLoading).hasClass('block')){
+            $(idLoading).removeClass('block');
+            $(idLoading).addClass("hidden");
           }
-        // si le formulaire est caché on l'affiche 
-        if($("#form-add").hasClass('hidden')){
-                $("#form-add").removeClass("hidden")
-                $("#form-add").addClass("block")
+        // si l'element est caché on l'affiche
+        if($(idElement).hasClass('hidden')){
+                $(idElement).removeClass("hidden")
+                $(idElement).addClass("block")
         }
     }
  
@@ -116,11 +116,9 @@ $(function(){
         }
     })
 
-   
-    
 
 
-  const getOneContact = () => {
+  const editContact = () => {
 
         const allEditBtn = document.querySelectorAll('#editData');
 
@@ -129,9 +127,9 @@ $(function(){
             editBtn.addEventListener('click', (e) => {
     
              
-                e.preventDefault()
+                // e.preventDefault()
                 showModal();
-                showLoading();
+                showLoading("#form-add", '#load-form');
 
                 $("img#avatar-contact-form").show()
 
@@ -147,7 +145,7 @@ $(function(){
                     
                         // apres une seconde afficher le formulaire à la place du loading
                         setInterval(() => {
-                            showForm()
+                            showElement("#form-add", '#load-form')
                         }, 1000);
 
                             $('input[name="email"]').val(res.result.email);
@@ -173,6 +171,46 @@ $(function(){
             })
         }
   }
+
+
+    const deleteContact = () =>{
+        
+        let allDeleteBtn = document.querySelectorAll('button#delete')
+
+        for(deleteBtn of allDeleteBtn){
+
+            deleteBtn.addEventListener('click', (e) => {
+
+                let confirmation = confirm('Are you sure you want to delete this item?')
+
+                if(confirmation){
+                    idDelete = e.target.dataset.id;
+
+                    $.ajax({
+            
+                        url : route('delete-contact', idDelete),
+                        type : "GET",
+    
+                        success:function(res){
+    
+                            getContacts();
+                            console.log(res.msg)
+                                
+                        },
+                        error:function(err){
+                            console.log(err)
+                        },
+                        
+                    })
+                }else{
+                    return;
+                }
+               
+            })
+
+        }
+
+    }
 
     const form = document.querySelector('#form-add');
 
@@ -210,12 +248,7 @@ $(function(){
                 }else{
                     
                     $('#form-add')[0].reset();
-                  
-                   // si il y a des contacts, ne plus afficher que c'est null
-                    // if(!data.contacts?.length ){
-                    //     $("#empty-contacts").addClass('hidden');
-                    // }
-
+                
                     // si on ajoute un contact, l'afficher
                     if(action === "new"){
                         getContacts(data.id)
@@ -252,47 +285,23 @@ $(function(){
     });
 
     
-    function getContacts(id){
-    
-       
-        // $('#refresh-list-ajax').addClass('animate-pulse');
+    function getContacts(id=null){
 
-        // $(`#${id}>div#card-contact`).addClass("bg-green-200");
-        //  let previous = id-1;
-       
-       
-
+       showLoading("#list-contact", '#load-data')
+            
         $.get(route("list-contacts"),{}, function(data){
 
-        
-             $('#refresh-list-ajax').html(data.result);
-         
-            // if($(`#${previous}`).hasClass("bg-green-200")){
-            //     $(`#${previous}>div#card-contact`).removeClass('bg-gree-200')
-            // }
+            $('#refresh-list-ajax').html(data.result);
 
-
-            // dans 2 sec supp la classe animate pulse
-        //     setTimeout(() => {
-        //        if($('#refresh-list-ajax').hasClass("animate-pulse")){
-        //             $('#refresh-list-ajax').removeClass('animate-pulse');
-        //        } 
-        //    }, 2000);
-
-           // edit contact
-             getOneContact();
-
-             let cardsContact = document.querySelectorAll('ul#list-contact>li');
-            
-             for(card of cardsContact){
-                 let srcIMG = card.querySelector('img').getAttribute("src");
-                if(srcIMG === ""){
-                    card.querySelector('img').classList.add('hidden');  
-                }
-                 
-             }
+            setInterval(() => {
+                showElement("#list-contact", '#load-data')
+            }, 1000);
+    
+            editContact();
+            deleteContact();
 
         },'json');
+           
     }
          
 
