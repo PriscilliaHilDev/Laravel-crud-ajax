@@ -3,10 +3,11 @@
     @foreach ($contacts as $contact)
         <li class="flex py-4 first:pt-0 last:pb-0 shrink-2" id={{$contact->id}}>
             <div id='card-contact' class=" py-8 px-8 w-1/2 hover:bg-red-300 mx-auto bg-white rounded-xl shadow-lg space-y-2 sm:py-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-6">
-                <img id='avatar' class="block  mx-auto w-32	h-24 rounded-r-lg sm:mx-0 sm:shrink-0"  src="{{Storage::url($contact->image->path)}}" alt="{{$contact->prenom}}">
+                <img id='avatar' class="block  mx-auto w-24	h-24 rounded-r-lg sm:mx-0 sm:shrink-0"  src="{{Storage::url($contact->image->path)}}" alt="{{$contact->prenom}}">
                 <div class="space-y-2 sm:text-left w-full ">
                     <span class='flex justify-end'>X</span>
                     <div class="space-y-0.5">
+                        <h5 id='contact-membres'>{{$contact->membres ? $contact->membres : ''}}</h5>
                         <p id='names' class="text-lg text-black font-semibold text-center break-words">
                           {{$contact->nom}} {{$contact->prenom}}
                         </p>

@@ -116,6 +116,9 @@ $(function(){
         }
     })
 
+   
+    
+
 
   const getOneContact = () => {
 
@@ -142,6 +145,7 @@ $(function(){
     
                     success:function(res){
                     
+                        // apres une seconde afficher le formulaire à la place du loading
                         setInterval(() => {
                             showForm()
                         }, 1000);
@@ -149,7 +153,16 @@ $(function(){
                             $('input[name="email"]').val(res.result.email);
                             $('input[name="prenom"]').val(res.result.prenom);
                             $('input[name="nom"]').val(res.result.nom);
-                            $("img#avatar-contact-form").attr('src', `/storage/${res.img}`)
+                            $("img#avatar-contact-form").attr('src', `/storage/${res.img}`);
+                       
+                            let optionSelect = document.querySelectorAll('select#membres>option');
+
+                            for(option of optionSelect ){
+                                if(option.value == res.result.membres){
+                                    option.setAttribute('selected', true)
+                                }
+                            }
+                            
                     },
                     error:function(err){
                         console.log(err)
@@ -215,6 +228,7 @@ $(function(){
                         $(`#${idEdit}`).find("p#names").text(`${data.update.nom} ${data.update.prenom}`);
                         $(`#${idEdit}`).find("p#prenom").text(data.update.prenom);
                         $(`#${idEdit}`).find("img#avatar").attr("src",`/storage/${data.img}`);
+                        $(`#${idEdit}`).find("h5#contact-membres").text(data.update.membres);
                     }
 
                     closeModal();

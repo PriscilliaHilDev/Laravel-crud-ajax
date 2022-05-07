@@ -15,7 +15,7 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('path');
+            $table->string('path')->default('images/default-avatar.jpg');
             $table->foreignId("contact_id")->constrained()->onDelete('cascade');
             $table->timestamps();
         });

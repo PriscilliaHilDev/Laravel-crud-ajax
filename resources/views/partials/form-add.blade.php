@@ -49,6 +49,13 @@
               <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{$errors->first('prenom')}}</span></p>
             @endif --}}
           </div>
+          <label for="membres" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email du contact</label>
+          <select id="membres" name='membres' class="block p-2 mb-6 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <option selected></option>
+            <option value="Collegues">Collégues</option>
+            <option value="Ami(e)s">Ami(e)s</option>
+            <option value="Famille">Famille</option>
+          </select>
           <div class="mb-8">
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email du contact</label>
             <input type="email" name='email' id="input-form" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" >
@@ -67,6 +74,7 @@
               <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{$errors->first('avatar')}}</span></p>
             @endif --}}
           </div>
+         
           <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button id='sendData' class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
               Enregistrer

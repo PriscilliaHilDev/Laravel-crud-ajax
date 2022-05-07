@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Image;
+use App\Models\Note;
 
 
 class Contact extends Model
@@ -26,5 +27,9 @@ class Contact extends Model
     
     public function image (){
         return $this->hasOne(Image::class);
+    }
+
+    public function notes (){
+        return $this->hasMany(Note::class);
     }
 }

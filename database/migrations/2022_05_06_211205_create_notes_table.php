@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateContactsTable extends Migration
+class CreateNotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateContactsTable extends Migration
      */
     public function up()
     {
-        Schema::create('contacts', function (Blueprint $table) {
+        Schema::create('notes', function (Blueprint $table) {
             $table->id();
-            $table->string("nom",255);
-            $table->string("prenom",255);
-            $table->string("email",255);
+            $table->mediumText('content');
             $table->timestamps();
-            $table->string('membres')->nullable();
-            $table->integer('phone')->nullable();
+            $table->foreignId("contact_id")->constrained()->onDelete('cascade');
 
+            // $table->unsignedBigInterger('contact_id');
+            // $table->foreing('contact_id')->reference('id')->on('contacts');
         });
     }
 
@@ -32,6 +31,6 @@ class CreateContactsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('notes');
     }
 }

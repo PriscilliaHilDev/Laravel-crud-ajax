@@ -51,8 +51,8 @@ class ContactController extends Controller
                 $contact->nom         = $request->nom ;
                 $contact->prenom      = $request->prenom ;
                 $contact->email       = $request->email ;
-               
-
+                $contact->membres     = $request->membres ;
+            
                 if($request->hasFile('avatar')) {
                   
                     $originalImage= $request->file('avatar');
@@ -73,8 +73,6 @@ class ContactController extends Controller
 
                     $image->path = $pathThumb;
 
-                }else{
-                    $image->path = "thumbnails/default-avatar.jpg";
                 }
 
                 $query = $contact->save();
@@ -83,9 +81,10 @@ class ContactController extends Controller
                 if( $query && $queryImg){
 
                     $maxID = Contact::orderBy('id', 'desc')->value('id'); 
-                    return response()->json(['status'=>1, 
-                                            'msg'=>'New Student has been successfully registered',
-                                            'id'=>$maxID
+                    return response()->json([   
+                        'status'=>1, 
+                        'msg'=>'New Student has been successfully registered',
+                        'id'=>$maxID
                     ]);
                 }
             }
@@ -132,6 +131,7 @@ class ContactController extends Controller
                 $getContact->nom = $request->nom;
                 $getContact->prenom = $request->prenom;
                 $getContact->email = $request->email;
+                $getContact->membres = $request->membres ;
             
                 if($request->hasFile('avatar')) {
 
@@ -160,22 +160,22 @@ class ContactController extends Controller
                     }
 
                     $getContact->image->path = $pathThumb;
+                    $queryImg = $getContact->image()->update([
+                        'path' => $pathThumb,
+                    ]);
                 }
-
-                $queryImg = $getContact->image()->update([
-                    'path' => $pathThumb,
-                ]);
 
                 $query = $getContact->save();
     
-                if( $query && $queryImg ){
+                if( $query ){
 
-                    return response()->json(['status'=>1,
-                                             'msg'=>'Mise à jour réussite !',
-                                             'contacts'=> $this->contacts->toArray(),
-                                             'update' => $getContact,
-                                             'img'=> $getContact->image->path
-                                            ]);
+                    return response()->json([
+                        'status'=>1,
+                        'msg'=>'Mise à jour réussite !',
+                        'contacts'=> $this->contacts->toArray(),
+                        'update' => $getContact,
+                        'img'=> $getContact->image->path
+                    ]);
                 }
             }
                

@@ -2257,6 +2257,7 @@ $(function () {
             url: route('detail-contact', idEdit),
             type: "GET",
             success: function success(res) {
+              // apres une seconde afficher le formulaire à la place du loading
               setInterval(function () {
                 showForm();
               }, 1000);
@@ -2264,6 +2265,24 @@ $(function () {
               $('input[name="prenom"]').val(res.result.prenom);
               $('input[name="nom"]').val(res.result.nom);
               $("img#avatar-contact-form").attr('src', "/storage/".concat(res.img));
+              var optionSelect = document.querySelectorAll('select#membres>option');
+
+              var _iterator4 = _createForOfIteratorHelper(optionSelect),
+                  _step4;
+
+              try {
+                for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+                  option = _step4.value;
+
+                  if (option.value == res.result.membres) {
+                    option.setAttribute('selected', true);
+                  }
+                }
+              } catch (err) {
+                _iterator4.e(err);
+              } finally {
+                _iterator4.f();
+              }
             },
             error: function error(err) {
               console.log(err);
@@ -2317,6 +2336,7 @@ $(function () {
             $("#".concat(idEdit)).find("p#names").text("".concat(data.update.nom, " ").concat(data.update.prenom));
             $("#".concat(idEdit)).find("p#prenom").text(data.update.prenom);
             $("#".concat(idEdit)).find("img#avatar").attr("src", "/storage/".concat(data.img));
+            $("#".concat(idEdit)).find("h5#contact-membres").text(data.update.membres);
           }
 
           closeModal();
@@ -2357,12 +2377,12 @@ $(function () {
       getOneContact();
       var cardsContact = document.querySelectorAll('ul#list-contact>li');
 
-      var _iterator4 = _createForOfIteratorHelper(cardsContact),
-          _step4;
+      var _iterator5 = _createForOfIteratorHelper(cardsContact),
+          _step5;
 
       try {
-        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-          card = _step4.value;
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+          card = _step5.value;
           var srcIMG = card.querySelector('img').getAttribute("src");
 
           if (srcIMG === "") {
@@ -2370,9 +2390,9 @@ $(function () {
           }
         }
       } catch (err) {
-        _iterator4.e(err);
+        _iterator5.e(err);
       } finally {
-        _iterator4.f();
+        _iterator5.f();
       }
     }, 'json');
   }
