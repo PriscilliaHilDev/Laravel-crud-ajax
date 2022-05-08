@@ -23,7 +23,7 @@ class FiltreController extends Controller
                 break;
 
             case 'collegues':
-                $contactFiltre = Contact::where('membres', "=", 'Collegues')->orderBy('created_at', 'desc')->get();  
+                $contactFiltre = Contact::where('membres', "=", 'Collegue')->orderBy('created_at', 'desc')->get();  
                 break;
 
             case 'autres':

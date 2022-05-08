@@ -19,6 +19,20 @@ $(function(){
       }
    }
 
+   const showElement = (idElement, idLoading) => {
+
+    // si loading est afficher on le retire 
+    if($(idLoading).hasClass('block')){
+        $(idLoading).removeClass('block');
+        $(idLoading).addClass("hidden");
+      }
+    // si l'element est caché on l'affiche
+    if($(idElement).hasClass('hidden')){
+            $(idElement).removeClass("hidden")
+            $(idElement).addClass("block")
+    }
+}
+
 
   getContacts();
     /***************** début modal **********************/
@@ -87,19 +101,7 @@ $(function(){
 
   
 
-    const showElement = (idElement, idLoading) => {
-
-        // si loading est afficher on le retire 
-        if($(idLoading).hasClass('block')){
-            $(idLoading).removeClass('block');
-            $(idLoading).addClass("hidden");
-          }
-        // si l'element est caché on l'affiche
-        if($(idElement).hasClass('hidden')){
-                $(idElement).removeClass("hidden")
-                $(idElement).addClass("block")
-        }
-    }
+  
  
 
     let inputFile = document.querySelector("#input-form[name='avatar']");

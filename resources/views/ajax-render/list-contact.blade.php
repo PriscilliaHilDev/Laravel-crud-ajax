@@ -31,7 +31,7 @@
         </li>
     @endforeach
     </ul>
-
+    {{-- {{$contacts->links()}} --}}
     @else
         <div id='empty-contacts' class="flex justify-center items-center bg-red-500 py-2 m-8">
             <h2 class='text-center font-sherif text-4xl py-8 text-white font-bold'> Aucuns utilisateurs trouvés </h2>

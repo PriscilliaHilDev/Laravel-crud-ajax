@@ -2135,6 +2135,20 @@ $(function () {
     }
   };
 
+  var showElement = function showElement(idElement, idLoading) {
+    // si loading est afficher on le retire 
+    if ($(idLoading).hasClass('block')) {
+      $(idLoading).removeClass('block');
+      $(idLoading).addClass("hidden");
+    } // si l'element est caché on l'affiche
+
+
+    if ($(idElement).hasClass('hidden')) {
+      $(idElement).removeClass("hidden");
+      $(idElement).addClass("block");
+    }
+  };
+
   getContacts();
   /***************** début modal **********************/
   // const token =  $('meta[name="csrf-token"]').attr('content')
@@ -2209,20 +2223,6 @@ $(function () {
   /***************** fin modal **********************/
 
   /***************** début ajax soumission formulaire **********************/
-
-  var showElement = function showElement(idElement, idLoading) {
-    // si loading est afficher on le retire 
-    if ($(idLoading).hasClass('block')) {
-      $(idLoading).removeClass('block');
-      $(idLoading).addClass("hidden");
-    } // si l'element est caché on l'affiche
-
-
-    if ($(idElement).hasClass('hidden')) {
-      $(idElement).removeClass("hidden");
-      $(idElement).addClass("block");
-    }
-  };
 
   var inputFile = document.querySelector("#input-form[name='avatar']");
   var imgPrevious = document.querySelector('#avatar-contact-form');
