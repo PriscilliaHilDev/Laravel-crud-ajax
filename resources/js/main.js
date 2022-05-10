@@ -165,7 +165,6 @@ $(function(){
 
         let btnPrev = document.querySelector('button#prev');
         let btnNext = document.querySelector('button#next');
-        let currentPage = $("#current-page").data('page');
         let maxPage = $('button#next').data('max');
         let indicatorPage = document.querySelector("#current-page")
 

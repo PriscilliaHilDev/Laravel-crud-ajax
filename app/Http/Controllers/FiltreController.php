@@ -15,19 +15,19 @@ class FiltreController extends Controller
 
         switch ($membre) {
             case 'famille':
-                $contactFiltre = Contact::where('membres', "=", 'Famille')->orderBy('created_at', 'desc')->get();  
+                $contactFiltre = Contact::where('membres', "=", 'Famille')->orderBy('created_at', 'desc')->paginate(2);  
                 break;
             
             case 'amis':
-                $contactFiltre = Contact::where('membres', "=", 'Ami(e)s')->orderBy('created_at', 'desc')->get();  
+                $contactFiltre = Contact::where('membres', "=", 'Ami(e)s')->orderBy('created_at', 'desc')->paginate(2);  
                 break;
 
             case 'collegues':
-                $contactFiltre = Contact::where('membres', "=", 'Collegue')->orderBy('created_at', 'desc')->get();  
+                $contactFiltre = Contact::where('membres', "=", 'Collegue')->orderBy('created_at', 'desc')->paginate(2);  
                 break;
 
             case 'autres':
-                $contactFiltre = Contact::where('membres', "=", NULL)->orderBy('created_at', 'desc')->get();  
+                $contactFiltre = Contact::where('membres', "=", NULL)->orderBy('created_at', 'desc')->paginate(2);  
                 break;
             
             default:
@@ -35,8 +35,16 @@ class FiltreController extends Controller
                 break;
         }
 
+        $lastPage =  $contactFiltre->lastPage();
+        $total =  $contactFiltre->total();
+        $currentPage =  $contactFiltre->currentPage();
+
+
         return view('contacts.filtre', [
-            'contacts' => $contactFiltre
+            'contacts' => $contactFiltre,
+            'lastPage' =>$lastPage,
+            'total' => $total,
+            'currentPage'=>$currentPage
         ]);
 
     }

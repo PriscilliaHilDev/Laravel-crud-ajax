@@ -2267,7 +2267,6 @@ $(function () {
     // }
     var btnPrev = document.querySelector('button#prev');
     var btnNext = document.querySelector('button#next');
-    var currentPage = $("#current-page").data('page');
     var maxPage = $('button#next').data('max');
     var indicatorPage = document.querySelector("#current-page");
     var page = 1;
