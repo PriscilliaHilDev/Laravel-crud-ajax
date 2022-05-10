@@ -2121,6 +2121,25 @@ var _require = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.j
 
 
 $(function () {
+  // $(document).on('click', '.pagination a', function(event){
+  //     event.preventDefault(); 
+  //     var page = $(this).attr('href').split('page=')[1];
+  //     console.log(page)
+  //     // fetch_data(page);
+  //    });
+  //    function fetch_data(page)
+  //    {
+  //     $.ajax({
+  //      url:"/pagination/fetch_data?page="+page,
+  //      success:function(data)
+  //      {
+  //       $('#table_data').html(data);
+  //      }
+  //     });
+  //    }
+  // let currentUrlLink= $(location).attr('href');
+  // let newCurrentUrlLink = new URL(currentUrlLink);
+  // let pageCurrentUrl = newCurrentUrlLink.searchParams.get("page");
   var showLoading = function showLoading(idElement, idLoading) {
     // Si l'element est visilble, if faut le cacher
     if ($(idElement).hasClass('block')) {
@@ -2234,6 +2253,62 @@ $(function () {
       imgPrevious.style.display = "block";
     }
   });
+
+  var pagination = function pagination() {
+    // let navigation = document.querySelector('[aria-label="Pagination Navigation"]');
+    // let linkPagination = navigation.querySelectorAll("a");
+    // console.log(navigation)
+    // for(links of linkPagination){
+    //     links.addEventListener('click', (e) => {
+    //         e.preventDefault()
+    //         let page = e.target.getAttribute("href").split('page=')[1];
+    //         fetch_data(page);
+    //     })
+    // }
+    var btnPrev = document.querySelector('button#prev');
+    var btnNext = document.querySelector('button#next');
+    var currentPage = $("#current-page").data('page');
+    var maxPage = $('button#next').data('max');
+    var indicatorPage = document.querySelector("#current-page");
+    var page = 1;
+    btnPrev.addEventListener('click', function (e) {
+      if (page == 1) {
+        e.target.setAttribute('disabled', true);
+      }
+
+      if (page > 1) {
+        btnNext.removeAttribute('disabled');
+        page--;
+        fetch_data(page);
+      } else {
+        page = 1;
+      }
+
+      indicatorPage.textContent = page;
+    });
+    btnNext.addEventListener('click', function (e) {
+      if (page < maxPage) {
+        page++;
+        btnPrev.removeAttribute('disabled');
+      }
+
+      if (page == maxPage) {
+        e.target.setAttribute('disabled', true);
+      }
+
+      fetch_data(page);
+      indicatorPage.textContent = page;
+    });
+  };
+
+  function fetch_data(page) {
+    $.ajax({
+      url: "/list?page=" + page,
+      success: function success(data) {
+        $('#refresh-list-ajax').html(data.result);
+      }
+    });
+  }
 
   var editContact = function editContact() {
     var allEditBtn = document.querySelectorAll('#editData');
@@ -2392,11 +2467,14 @@ $(function () {
   function getContacts() {
     var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
     showLoading("#list-contact", '#load-data');
+    $('#pagination').addClass('hidden');
     $.get(route("list-contacts"), {}, function (data) {
       $('#refresh-list-ajax').html(data.result);
       setInterval(function () {
         showElement("#list-contact", '#load-data');
+        $('#pagination').removeClass('hidden');
       }, 1000);
+      pagination(data.result);
       editContact();
       deleteContact();
     }, 'json');

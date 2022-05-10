@@ -19,10 +19,7 @@ Route::get('/', function () {
     return view('contacts.home');
 });
 
-Route::get('/contacts', function () {
-    return view('contacts.list');
-})->name('contacts');
-
+Route::get('/contacts', [ContactController::class,'listContact'])->name('contacts');
 Route::get('/list',[ContactController::class,'fetchAllContacts'])->name('list-contacts');
 Route::get('/ajout', [ContactController::class, "addContact"])->name('add-contact');
 Route::post('/ajout', [ContactController::class, "addContact"])->name('send-contact');

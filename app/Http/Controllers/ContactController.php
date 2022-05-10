@@ -8,6 +8,7 @@ use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Pagination\Paginator;
 use Images;
 
 
@@ -17,15 +18,28 @@ class ContactController extends Controller
 
     public function __construct()
     {
-        $this->contacts = Contact::orderBy('created_at', 'desc')->get();  
+        $this->contacts = Contact::orderBy('created_at', 'desc')->paginate(2);  
     }
 
+    public function listContact () {
+
+        $lastPage =  $this->contacts->lastPage();
+        $total =  $this->contacts->total();
+        $currentPage =  $this->contacts->currentPage();
+
+        return view('contacts.list', [
+            "contacts" => $this->contacts,
+            'lastPage' =>$lastPage,
+            'total' => $total,
+            'currentPage'=>$currentPage
+        ]);
+    }
 
     public function fetchAllContacts () {
 
         $data = view('ajax-render.list-contact')->with('contacts', $this->contacts)->render();
         return response()->json(['code'=>1,'result'=>$data]);
-
+        
     }
 
     public function addContact (Request $request) {
