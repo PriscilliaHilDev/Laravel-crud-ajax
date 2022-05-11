@@ -1,4 +1,4 @@
-<div id='result-filtre'>
+
 @if($contacts->count())
     <ul role="list" id='list-contact-pagination' class="p-6 divide-y divide-slate-10">
     @foreach ($contacts as $contact)
@@ -33,4 +33,4 @@
             <h2 class='text-center font-sherif text-4xl py-8 text-white font-bold'> Aucuns utilisateurs trouvés </h2>
         </div>
     @endif
-    </div>
+   

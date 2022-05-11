@@ -11,8 +11,8 @@
         </div>    
         <div id='refresh-list-ajax'></div>
         {{-- {!! $contacts->links() !!} --}}
-        @if($contacts->count())
-            <div id='pagination' class="flex flex-col items-center">
+        @if($contacts->count() > 1)
+            <div id='pagination' class=" hidden flex flex-col items-center">
                 <!-- Help text -->
                 <span class="text-sm text-gray-700 dark:text-gray-400">
                     Pagination <span id ='current-page' data-page={{$currentPage}} class="font-semibold text-gray-900 ">{{$currentPage}}</span> sur <span class="font-semibold text-gray-900 ">{{$lastPage}}</span> of <span class="font-semibold text-gray-900 "> {{$total}} </span>contacts trouvés

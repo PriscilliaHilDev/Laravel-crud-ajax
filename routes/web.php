@@ -19,15 +19,12 @@ Route::get('/', function () {
     return view('contacts.home');
 });
 
-Route::get('/pagination',[ContactController::class,'paginationContacts'])->name('pagination-contacts');
 Route::get('/contacts', [ContactController::class,'listContact'])->name('contacts');
-Route::get('/list',[ContactController::class,'fetchAllContacts'])->name('list-contacts');
 Route::get('/ajout', [ContactController::class, "addContact"])->name('add-contact');
 Route::post('/ajout', [ContactController::class, "addContact"])->name('send-contact');
 Route::get('/edit/{id}', [ContactController::class, "editContact"])->name('get-edit-contact')->whereNumber('id');
 Route::post('/edit/{id}', [ContactController::class, "editContact"])->name('edit-contact')->whereNumber('id');
 Route::get('/detail/{id}', [ContactController::class, "detailContact"])->name('detail-contact')->whereNumber('id');
 Route::get('/{membre}',[FiltreController::class,'filtreContact'])->name('filtre-contact');
-Route::get('/pagination-filtre/{membre}',[FiltreController::class,'paginationContactsFiltre'])->name('pagination-filtre-contacts');
 Route::get('/supprimer/{id}',[ContactController::class,'deleteContact'])->name('delete-contact');
 

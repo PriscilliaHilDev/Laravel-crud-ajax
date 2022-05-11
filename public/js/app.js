@@ -2121,25 +2121,6 @@ var _require = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.j
 
 
 $(function () {
-  // $(document).on('click', '.pagination a', function(event){
-  //     event.preventDefault(); 
-  //     var page = $(this).attr('href').split('page=')[1];
-  //     console.log(page)
-  //     // fetch_data(page);
-  //    });
-  //    function fetch_data(page)
-  //    {
-  //     $.ajax({
-  //      url:"/pagination/fetch_data?page="+page,
-  //      success:function(data)
-  //      {
-  //       $('#table_data').html(data);
-  //      }
-  //     });
-  //    }
-  // let currentUrlLink= $(location).attr('href');
-  // let newCurrentUrlLink = new URL(currentUrlLink);
-  // let pageCurrentUrl = newCurrentUrlLink.searchParams.get("page");
   var showLoading = function showLoading(idElement, idLoading) {
     // Si l'element est visilble, if faut le cacher
     if ($(idElement).hasClass('block')) {
@@ -2169,6 +2150,7 @@ $(function () {
   };
 
   getContacts();
+  getContactsFiltre();
   /***************** début modal **********************/
   // const token =  $('meta[name="csrf-token"]').attr('content')
 
@@ -2263,7 +2245,7 @@ $(function () {
   //     })
   // }
 
-  var pagination = function pagination(prevID, nextID, urlRequest) {
+  var pagination = function pagination(prevID, nextID, urlRequest, refreshElement) {
     var btnPrev = document.querySelector(prevID);
     var btnNext = document.querySelector(nextID);
     var maxPage = $(nextID).data('max');
@@ -2277,7 +2259,7 @@ $(function () {
       if (page > 1) {
         btnNext.removeAttribute('disabled');
         page--;
-        getDataPagination(urlRequest, page);
+        getDataPagination(urlRequest, page, refreshElement);
       } else {
         page = 1;
       }
@@ -2294,19 +2276,16 @@ $(function () {
         e.target.setAttribute('disabled', true);
       }
 
-      getDataPagination(urlRequest, page);
+      getDataPagination(urlRequest, page, refreshElement);
       indicatorPage.textContent = page;
     });
   };
 
-  var membre = window.location.pathname;
-  var paramMembre = membre.replace('/', '').trim();
-
-  function getDataPagination(urlRequest, page) {
+  function getDataPagination(urlRequest, page, refreshElement) {
     $.ajax({
       url: urlRequest + page,
       success: function success(data) {
-        $('#refresh-list-ajax').html(data.result);
+        $(refreshElement).html(data.result);
       }
     });
   }
@@ -2468,25 +2447,37 @@ $(function () {
   function getContacts() {
     var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
     showLoading("#list-contact", '#load-data');
-    $('#pagination').addClass('hidden');
-    $.get(route("list-contacts"), {}, function (data) {
+    $.get(route("contacts"), {}, function (data) {
       $('#refresh-list-ajax').html(data.result);
       setInterval(function () {
         showElement("#list-contact", '#load-data');
         $('#pagination').removeClass('hidden');
       }, 1000);
+      var membre = window.location.pathname;
+      var paramMembre = membre.replace('/', '').trim();
       var tabMembre = ['famille', 'amis', 'collegues', 'autres'];
 
       if (tabMembre.includes(paramMembre)) {
         //pagination avec filtre
-        pagination('button#prev-filtre', 'button#next-filtre', "/pagination-filtre/".concat(paramMembre, "?page="));
+        pagination('button#prev-filtre', 'button#next-filtre', "/".concat(paramMembre, "?type=pagination&page="), '#refresh-list-ajax-filtre');
       } else {
         // pagination sans filtre
-        pagination('button#prev', 'button#next', "/pagination?page=");
+        pagination('button#prev', 'button#next', "/contacts?type=pagination&page=", '#refresh-list-ajax', 'pagination');
       }
 
       editContact();
       deleteContact();
+    }, 'json');
+  }
+
+  function getContactsFiltre() {
+    var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    var membre = window.location.pathname;
+    var paramMembre = membre.replace('/', '').trim();
+    console.log(paramMembre);
+    $.get(route("filtre-contact", paramMembre), {}, function (data) {
+      $('#refresh-list-ajax-filtre').html(data.result);
+      console.log(data.result);
     }, 'json');
   }
 });

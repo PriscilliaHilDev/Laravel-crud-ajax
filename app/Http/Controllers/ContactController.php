@@ -21,7 +21,21 @@ class ContactController extends Controller
         $this->contacts = Contact::orderBy('created_at', 'desc')->paginate(2);  
     }
 
-    public function listContact () {
+    public function listContact (Request $request) {
+       
+        $data;
+
+        if($request->ajax() && !$request->type){
+
+            $data = view('ajax-render.list-contact')->with('contacts', $this->contacts)->render();
+            return response()->json(['code'=>1,'result'=>$data]);
+        }
+
+        if($request->ajax() && $request->type == "pagination"){
+
+            $data = view('ajax-render.list-contact-pagination')->with('contacts', $this->contacts)->render();
+            return response()->json(['code'=>1999,'result'=>$data]);
+        }
 
         $lastPage =  $this->contacts->lastPage();
         $total =  $this->contacts->total();
@@ -35,19 +49,6 @@ class ContactController extends Controller
         ]);
     }
 
-    public function paginationContacts () {
-
-        $data = view('ajax-render.list-contact-pagination')->with('contacts', $this->contacts)->render();
-        return response()->json(['code'=>1,'result'=>$data]);
-        
-    }
-
-    public function fetchAllContacts () {
-
-        $data = view('ajax-render.list-contact')->with('contacts', $this->contacts)->render();
-        return response()->json(['code'=>1,'result'=>$data]);
-        
-    }
 
     public function addContact (Request $request) {
 

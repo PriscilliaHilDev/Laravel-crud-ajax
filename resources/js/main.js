@@ -6,30 +6,6 @@ const { isArguments, get } = require("lodash");
 $(function(){
 
 
-    // $(document).on('click', '.pagination a', function(event){
-    //     event.preventDefault(); 
-    //     var page = $(this).attr('href').split('page=')[1];
-    //     console.log(page)
-    //     // fetch_data(page);
-    //    });
-
-    
-      
-    //    function fetch_data(page)
-    //    {
-    //     $.ajax({
-    //      url:"/pagination/fetch_data?page="+page,
-    //      success:function(data)
-    //      {
-    //       $('#table_data').html(data);
-    //      }
-    //     });
-    //    }
-       
-
-    // let currentUrlLink= $(location).attr('href');
-    // let newCurrentUrlLink = new URL(currentUrlLink);
-    // let pageCurrentUrl = newCurrentUrlLink.searchParams.get("page");
 
     const showLoading = (idElement, idLoading) => {
         // Si l'element est visilble, if faut le cacher
@@ -61,6 +37,7 @@ $(function(){
 
 
   getContacts();
+  getContactsFiltre()
     /***************** début modal **********************/
 
     // const token =  $('meta[name="csrf-token"]').attr('content')
@@ -158,7 +135,7 @@ $(function(){
         //     })
         // }
 
-    const pagination = (prevID, nextID, urlRequest) => {
+    const pagination = (prevID, nextID, urlRequest, refreshElement) => {
 
     
         let btnPrev = document.querySelector(prevID);
@@ -181,7 +158,7 @@ $(function(){
 
                 page --
               
-                getDataPagination(urlRequest, page);
+                getDataPagination(urlRequest, page, refreshElement);
 
             }else{
                 page = 1;
@@ -203,25 +180,20 @@ $(function(){
                 e.target.setAttribute('disabled', true)
             }
 
-            getDataPagination(urlRequest, page);
+            getDataPagination(urlRequest, page, refreshElement);
             indicatorPage.textContent = page
 
         })
 
     }
 
-
-    let membre = window.location.pathname;
-   let paramMembre =  membre.replace('/', '').trim()
-  
-
-    function getDataPagination(urlRequest,page)
+    function getDataPagination(urlRequest,page, refreshElement)
     {
         $.ajax({
             url:urlRequest+page,
             success:function(data)
             {
-                $('#refresh-list-ajax').html(data.result);
+                $(refreshElement).html(data.result);
             }
         });
     }
@@ -398,32 +370,28 @@ $(function(){
     function getContacts(id=null){
 
        showLoading("#list-contact", '#load-data');
-       $('#pagination').addClass('hidden')
 
-            
-        $.get(route("list-contacts"),{}, function(data){
+        $.get(route("contacts"),{}, function(data){
 
-            $('#refresh-list-ajax').html(data.result);
-
-           
+            $('#refresh-list-ajax').html(data.result); 
 
             setInterval(() => {
                 showElement("#list-contact", '#load-data');
                 $('#pagination').removeClass('hidden');
 
             }, 1000);
-    
         
+            let membre = window.location.pathname;
+            let paramMembre =  membre.replace('/', '').trim()
             let tabMembre = ['famille', 'amis', 'collegues', 'autres'];
 
             if(tabMembre.includes(paramMembre)){
-
                 //pagination avec filtre
-                pagination('button#prev-filtre', 'button#next-filtre', `/pagination-filtre/${paramMembre}?page=`)
+                pagination('button#prev-filtre', 'button#next-filtre', `/${paramMembre}?type=pagination&page=`, '#refresh-list-ajax-filtre')
               
             }else{
                 // pagination sans filtre
-                pagination('button#prev', 'button#next', "/pagination?page=")
+                pagination('button#prev', 'button#next', "/contacts?type=pagination&page=", '#refresh-list-ajax', 'pagination')
             }
     
             editContact();
@@ -432,8 +400,22 @@ $(function(){
         },'json');
            
     }
-         
 
+    function getContactsFiltre(id=null){
+ 
+        let membre = window.location.pathname;
+        let paramMembre =  membre.replace('/', '').trim()
+        console.log(paramMembre)
+             
+         $.get(route("filtre-contact", paramMembre),{}, function(data){
+ 
+             $('#refresh-list-ajax-filtre').html(data.result); 
+             console.log(data.result)
+ 
+         },'json');
+            
+    }
+        
 })
 
 
