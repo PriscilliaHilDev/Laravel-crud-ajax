@@ -6,9 +6,8 @@
            Ajouter contacts 
         </span>
     </button>
-    
-        @include('ajax-render.list-contact')
- 
+@include('ajax-render.list-contact')
+
 @if($contacts->count())
 <div id='pagination' class="flex flex-col items-center">
     <!-- Help text -->
