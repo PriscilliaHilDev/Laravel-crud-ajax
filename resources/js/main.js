@@ -411,6 +411,8 @@ $(function(){
  
              $('#refresh-list-ajax-filtre').html(data.result); 
              console.log(data.result)
+             editContact();
+             deleteContact();
  
          },'json');
             
