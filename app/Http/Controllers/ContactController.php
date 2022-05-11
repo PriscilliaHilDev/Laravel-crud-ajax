@@ -35,6 +35,13 @@ class ContactController extends Controller
         ]);
     }
 
+    public function paginationContacts () {
+
+        $data = view('ajax-render.list-contact-pagination')->with('contacts', $this->contacts)->render();
+        return response()->json(['code'=>1,'result'=>$data]);
+        
+    }
+
     public function fetchAllContacts () {
 
         $data = view('ajax-render.list-contact')->with('contacts', $this->contacts)->render();

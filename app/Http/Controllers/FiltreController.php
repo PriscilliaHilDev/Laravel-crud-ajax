@@ -48,4 +48,35 @@ class FiltreController extends Controller
         ]);
 
     }
+
+    public function paginationContactsFiltre (String $membre) {
+
+        $contactFiltre;
+
+        switch ($membre) {
+            case 'famille':
+                $contactFiltre = Contact::where('membres', "=", 'Famille')->orderBy('created_at', 'desc')->paginate(2);  
+                break;
+            
+            case 'amis':
+                $contactFiltre = Contact::where('membres', "=", 'Ami(e)s')->orderBy('created_at', 'desc')->paginate(2);  
+                break;
+
+            case 'collegues':
+                $contactFiltre = Contact::where('membres', "=", 'Collegue')->orderBy('created_at', 'desc')->paginate(2);  
+                break;
+
+            case 'autres':
+                $contactFiltre = Contact::where('membres', "=", NULL)->orderBy('created_at', 'desc')->paginate(2);  
+                break;
+            
+            default:
+                $contactFiltre = "inconnu";
+                break;
+        }
+
+        $data = view('ajax-render.list-contact-pagination')->with('contacts', $contactFiltre)->render();
+        return response()->json(['code'=>1,'result'=>$data]);
+        
+    }
 }

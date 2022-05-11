@@ -139,18 +139,13 @@ $(function(){
         
         if(file){
        
-            imgPrevious.setAttribute('src', URL.createObjectURL(file));
-            imgPrevious.style.display = "block";
+            imgPreview.setAttribute('src', URL.createObjectURL(file));
+            imgPreview.style.display = "block";
         }
     })
 
 
-
-
- 
-    const pagination = () => {
-
-        // let navigation = document.querySelector('[aria-label="Pagination Navigation"]');
+  // let navigation = document.querySelector('[aria-label="Pagination Navigation"]');
         // let linkPagination = navigation.querySelectorAll("a");
 
         // console.log(navigation)
@@ -163,9 +158,12 @@ $(function(){
         //     })
         // }
 
-        let btnPrev = document.querySelector('button#prev');
-        let btnNext = document.querySelector('button#next');
-        let maxPage = $('button#next').data('max');
+    const pagination = (prevID, nextID, urlRequest) => {
+
+    
+        let btnPrev = document.querySelector(prevID);
+        let btnNext = document.querySelector(nextID);
+        let maxPage = $(nextID).data('max');
         let indicatorPage = document.querySelector("#current-page")
 
 
@@ -183,7 +181,7 @@ $(function(){
 
                 page --
               
-                fetch_data(page); 
+                getDataPagination(urlRequest, page);
 
             }else{
                 page = 1;
@@ -205,7 +203,7 @@ $(function(){
                 e.target.setAttribute('disabled', true)
             }
 
-            fetch_data(page);
+            getDataPagination(urlRequest, page);
             indicatorPage.textContent = page
 
         })
@@ -213,10 +211,14 @@ $(function(){
     }
 
 
-    function fetch_data(page)
+    let membre = window.location.pathname;
+   let paramMembre =  membre.replace('/', '').trim()
+  
+
+    function getDataPagination(urlRequest,page)
     {
         $.ajax({
-            url:"/list?page="+page,
+            url:urlRequest+page,
             success:function(data)
             {
                 $('#refresh-list-ajax').html(data.result);
@@ -224,6 +226,7 @@ $(function(){
         });
     }
 
+    
 
   const editContact = () => {
 
@@ -410,7 +413,19 @@ $(function(){
 
             }, 1000);
     
-            pagination(data.result)
+        
+            let tabMembre = ['famille', 'amis', 'collegues', 'autres'];
+
+            if(tabMembre.includes(paramMembre)){
+
+                //pagination avec filtre
+                pagination('button#prev-filtre', 'button#next-filtre', `/pagination-filtre/${paramMembre}?page=`)
+              
+            }else{
+                // pagination sans filtre
+                pagination('button#prev', 'button#next', "/pagination?page=")
+            }
+    
             editContact();
             deleteContact();
 

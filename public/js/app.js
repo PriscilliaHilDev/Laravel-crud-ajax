@@ -2249,25 +2249,24 @@ $(function () {
     var file = e.target.files[0];
 
     if (file) {
-      imgPrevious.setAttribute('src', URL.createObjectURL(file));
-      imgPrevious.style.display = "block";
+      imgPreview.setAttribute('src', URL.createObjectURL(file));
+      imgPreview.style.display = "block";
     }
-  });
+  }); // let navigation = document.querySelector('[aria-label="Pagination Navigation"]');
+  // let linkPagination = navigation.querySelectorAll("a");
+  // console.log(navigation)
+  // for(links of linkPagination){
+  //     links.addEventListener('click', (e) => {
+  //         e.preventDefault()
+  //         let page = e.target.getAttribute("href").split('page=')[1];
+  //         fetch_data(page);
+  //     })
+  // }
 
-  var pagination = function pagination() {
-    // let navigation = document.querySelector('[aria-label="Pagination Navigation"]');
-    // let linkPagination = navigation.querySelectorAll("a");
-    // console.log(navigation)
-    // for(links of linkPagination){
-    //     links.addEventListener('click', (e) => {
-    //         e.preventDefault()
-    //         let page = e.target.getAttribute("href").split('page=')[1];
-    //         fetch_data(page);
-    //     })
-    // }
-    var btnPrev = document.querySelector('button#prev');
-    var btnNext = document.querySelector('button#next');
-    var maxPage = $('button#next').data('max');
+  var pagination = function pagination(prevID, nextID, urlRequest) {
+    var btnPrev = document.querySelector(prevID);
+    var btnNext = document.querySelector(nextID);
+    var maxPage = $(nextID).data('max');
     var indicatorPage = document.querySelector("#current-page");
     var page = 1;
     btnPrev.addEventListener('click', function (e) {
@@ -2278,7 +2277,7 @@ $(function () {
       if (page > 1) {
         btnNext.removeAttribute('disabled');
         page--;
-        fetch_data(page);
+        getDataPagination(urlRequest, page);
       } else {
         page = 1;
       }
@@ -2295,14 +2294,17 @@ $(function () {
         e.target.setAttribute('disabled', true);
       }
 
-      fetch_data(page);
+      getDataPagination(urlRequest, page);
       indicatorPage.textContent = page;
     });
   };
 
-  function fetch_data(page) {
+  var membre = window.location.pathname;
+  var paramMembre = membre.replace('/', '').trim();
+
+  function getDataPagination(urlRequest, page) {
     $.ajax({
-      url: "/list?page=" + page,
+      url: urlRequest + page,
       success: function success(data) {
         $('#refresh-list-ajax').html(data.result);
       }
@@ -2473,7 +2475,16 @@ $(function () {
         showElement("#list-contact", '#load-data');
         $('#pagination').removeClass('hidden');
       }, 1000);
-      pagination(data.result);
+      var tabMembre = ['famille', 'amis', 'collegues', 'autres'];
+
+      if (tabMembre.includes(paramMembre)) {
+        //pagination avec filtre
+        pagination('button#prev-filtre', 'button#next-filtre', "/pagination-filtre/".concat(paramMembre, "?page="));
+      } else {
+        // pagination sans filtre
+        pagination('button#prev', 'button#next', "/pagination?page=");
+      }
+
       editContact();
       deleteContact();
     }, 'json');
