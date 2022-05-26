@@ -2279,7 +2279,8 @@ $(function () {
       getDataPagination(urlRequest, page, refreshElement);
       indicatorPage.textContent = page;
     });
-  };
+  }; // requete ajax lors de la pagination
+
 
   function getDataPagination(urlRequest, page, refreshElement) {
     $.ajax({
