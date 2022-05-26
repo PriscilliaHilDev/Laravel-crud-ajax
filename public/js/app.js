@@ -2466,7 +2466,6 @@ $(function () {
       }
 
       editContact();
-      deleteContact();
     }, 'json');
   }
 

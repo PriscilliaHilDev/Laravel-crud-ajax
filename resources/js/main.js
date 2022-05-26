@@ -395,7 +395,6 @@ $(function(){
             }
     
             editContact();
-            deleteContact();
 
         },'json');
            
