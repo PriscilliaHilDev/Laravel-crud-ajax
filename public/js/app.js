@@ -2231,8 +2231,8 @@ $(function () {
     var file = e.target.files[0];
 
     if (file) {
-      imgPreview.setAttribute('src', URL.createObjectURL(file));
-      imgPreview.style.display = "block";
+      imgPrevious.setAttribute('src', URL.createObjectURL(file));
+      imgPrevious.style.display = "block";
     }
   }); // let navigation = document.querySelector('[aria-label="Pagination Navigation"]');
   // let linkPagination = navigation.querySelectorAll("a");
@@ -2286,6 +2286,8 @@ $(function () {
       url: urlRequest + page,
       success: function success(data) {
         $(refreshElement).html(data.result);
+        editContact();
+        deleteContact();
       }
     });
   }
@@ -2467,7 +2469,8 @@ $(function () {
 
       editContact();
     }, 'json');
-  }
+  } // au clique sur le menu 
+
 
   function getContactsFiltre() {
     var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
@@ -2476,7 +2479,6 @@ $(function () {
     console.log(paramMembre);
     $.get(route("filtre-contact", paramMembre), {}, function (data) {
       $('#refresh-list-ajax-filtre').html(data.result);
-      console.log(data.result);
       editContact();
       deleteContact();
     }, 'json');

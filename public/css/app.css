@@ -1869,6 +1869,11 @@ body{
     padding-right: 2rem;
   }
 
+  .lg\:px-5 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
   .lg\:pb-28 {
     padding-bottom: 7rem;
   }

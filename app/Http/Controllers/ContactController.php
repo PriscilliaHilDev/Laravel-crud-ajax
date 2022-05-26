@@ -170,7 +170,7 @@ class ContactController extends Controller
                 
 
                     // delete old img 
-                    if($getContact->image->path !== "thumbnails/default-avatar.jpg"){
+                    if($getContact->image->path !== "images/default-avatar.jpg"){
 
                         $oldThumbnail = $getContact->image->path;
 

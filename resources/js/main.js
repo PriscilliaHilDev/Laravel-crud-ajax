@@ -102,10 +102,7 @@ $(function(){
 
     /***************** début ajax soumission formulaire **********************/
 
-  
 
-  
- 
 
     let inputFile = document.querySelector("#input-form[name='avatar']");
     let imgPrevious = document.querySelector('#avatar-contact-form');
@@ -116,8 +113,8 @@ $(function(){
         
         if(file){
        
-            imgPreview.setAttribute('src', URL.createObjectURL(file));
-            imgPreview.style.display = "block";
+            imgPrevious.setAttribute('src', URL.createObjectURL(file));
+            imgPrevious.style.display = "block";
         }
     })
 
@@ -194,6 +191,8 @@ $(function(){
             success:function(data)
             {
                 $(refreshElement).html(data.result);
+                editContact();
+                deleteContact();
             }
         });
     }
@@ -400,6 +399,8 @@ $(function(){
            
     }
 
+    // au clique sur le menu 
+
     function getContactsFiltre(id=null){
  
         let membre = window.location.pathname;
@@ -409,7 +410,6 @@ $(function(){
          $.get(route("filtre-contact", paramMembre),{}, function(data){
  
              $('#refresh-list-ajax-filtre').html(data.result); 
-             console.log(data.result)
              editContact();
              deleteContact();
  
